@@ -18,7 +18,7 @@ jQuery(document).ready(function () {
         var blockForm = jQuery(this).closest('div.block-form');
         var attachment = blockForm.find('div.attachment');
         var fileId = attachment.find('input[name$="[file_id]"]').val();
-        jQuery.post(imageAnnotationUrl, {fileId: fileId})
+        jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})
             .done(function(data) {
                 var container = blockForm.find('div.image-annotation-container');
                 var image = jQuery.parseHTML(data)[0];
@@ -32,8 +32,20 @@ jQuery(document).ready(function () {
             });
     });
 
-    // Set annotations as block data.
-    anno.addHandler('onAnnotationCreated', function(annotation) {
-        console.log(annotation);
+    // Set the annotations for every image-annotation block.
+    jQuery('#exhibit-page-form').on('submit', function(e) {
+        e.preventDefault();
+        var images = [];
+        jQuery.each(anno.getAnnotations(), function() {
+            var imageId = /[^#]*$/.exec(this.src)[0];
+            if (!(imageId in images)) {
+                images[imageId] = [];
+            }
+            images[imageId].push({text: this.text, shapes: this.shapes});
+        });
+        console.log(images);
+        // @todo: iterate images, adding annotations to corresponding block
+        // key = image id; get closest block-form and add hidden inputs there
+        // e.g. jQuery('#' + key).closest('div.block-form');
     });
 });

@@ -2,8 +2,8 @@ jQuery(document).ready(function () {
 
     // Remove the add-item button from all image-annotation blocks.
     function removeAddItem() {
-        var imageAnnotationBlocks = jQuery('input[name$="[layout]"][value="image-annotation"]').closest('div.block-form');
-        imageAnnotationBlocks.each(function() {
+        var blocks = jQuery('input[name$="[layout]"][value="image-annotation"]').closest('div.block-form');
+        blocks.each(function() {
             jQuery(this).find('div.add-item').hide();
         });
     }
@@ -24,7 +24,13 @@ jQuery(document).ready(function () {
                 var image = jQuery.parseHTML(data)[0];
                 container.append(image);
                 image.onload = function() {
-                    anno.makeAnnotatable(image)
+                    anno.makeAnnotatable(image);
+                    var imageSrc = jQuery(image).attr('src');
+                    jQuery.each(container.data('imageAnnotations'), function() {
+                        var annotation = JSON.parse(this);
+                        annotation.src = imageSrc;
+                        anno.addAnnotation(annotation);
+                    });
                 };
             })
             .fail(function(data) {
@@ -37,12 +43,12 @@ jQuery(document).ready(function () {
         jQuery.each(anno.getAnnotations(), function() {
             var imageId = /[^#]*$/.exec(this.src)[0];
             var image = jQuery('#' + imageId);
-            var imageContainer = image.closest('div.image-annotation-container');
+            var container = image.closest('div.image-annotation-container');
             jQuery('<input>')
                 .attr('type', 'hidden')
-                .attr('name', imageContainer.data('formStem') + '[options][image-annotation][]')
+                .attr('name', container.data('formStem') + '[options][image-annotation][]')
                 .val(JSON.stringify({text: this.text, shapes: this.shapes}))
-                .prependTo(imageContainer);
+                .prependTo(container);
         });
     });
 });

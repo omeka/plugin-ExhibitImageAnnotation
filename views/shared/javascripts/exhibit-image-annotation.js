@@ -34,18 +34,15 @@ jQuery(document).ready(function () {
 
     // Set the annotations for every image-annotation block.
     jQuery('#exhibit-page-form').on('submit', function(e) {
-        e.preventDefault();
-        var images = [];
         jQuery.each(anno.getAnnotations(), function() {
             var imageId = /[^#]*$/.exec(this.src)[0];
-            if (!(imageId in images)) {
-                images[imageId] = [];
-            }
-            images[imageId].push({text: this.text, shapes: this.shapes});
+            var image = jQuery('#' + imageId);
+            var imageContainer = image.closest('div.image-annotation-container');
+            jQuery('<input>')
+                .attr('type', 'hidden')
+                .attr('name', imageContainer.data('formStem') + '[options][image-annotation][]')
+                .val(JSON.stringify({text: this.text, shapes: this.shapes}))
+                .prependTo(imageContainer);
         });
-        console.log(images);
-        // @todo: iterate images, adding annotations to corresponding block
-        // key = image id; get closest block-form and add hidden inputs there
-        // e.g. jQuery('#' + key).closest('div.block-form');
     });
 });

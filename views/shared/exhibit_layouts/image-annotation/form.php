@@ -8,5 +8,5 @@
         <h4><?php echo __('Annotate Image'); ?></h4>
         <div class="drawer image-annotation-drawer"></div>
     </div>
-    <div class="image-annotation-container"></div>
+    <div class="image-annotation-container" data-form-stem="<?php echo $block->getFormStem(); ?>"></div>
 </div>

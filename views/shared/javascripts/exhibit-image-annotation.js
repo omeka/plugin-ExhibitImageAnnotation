@@ -15,7 +15,13 @@ jQuery(document).ready(function () {
 
     // Load an annotatable image.
     jQuery(document).on('click', 'div.image-annotation-drawer', function(e) {
-        var blockForm = jQuery(this).closest('div.block-form');
+        var drawer = jQuery(this);
+        if (drawer.hasClass('image-annotation-opened')) {
+            // Don't reload the image if the drawer has already been opened.
+            return;
+        }
+        drawer.addClass('image-annotation-opened');
+        var blockForm = drawer.closest('div.block-form');
         var attachment = blockForm.find('div.attachment');
         var fileId = attachment.find('input[name$="[file_id]"]').val();
         jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})

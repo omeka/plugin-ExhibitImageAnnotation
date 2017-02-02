@@ -24,6 +24,7 @@ jQuery(document).ready(function () {
         var blockForm = drawer.closest('div.block-form');
         var attachment = blockForm.find('div.attachment');
         var fileId = attachment.find('input[name$="[file_id]"]').val();
+        // Note that a previous script sets imageAnnotationUrl.
         jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})
             .done(function(data) {
                 var container = blockForm.find('div.image-annotation-container');
@@ -39,8 +40,8 @@ jQuery(document).ready(function () {
                     });
                 };
             })
-            .fail(function(data) {
-                console.log(data);
+            .fail(function(jqXHR) {
+                console.log(jqXHR);
             });
     });
 

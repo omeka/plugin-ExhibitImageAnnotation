@@ -16,13 +16,19 @@ jQuery(document).ready(function () {
     // Load an annotatable image.
     jQuery(document).on('click', 'div.image-annotation-drawer', function(e) {
         var drawer = jQuery(this);
-        if (drawer.hasClass('image-annotation-opened')) {
-            // Don't reload the image if the drawer has already been opened.
-            return;
-        }
-        drawer.addClass('image-annotation-opened');
         var blockForm = drawer.closest('div.block-form');
         var attachment = blockForm.find('div.attachment');
+
+        console.log(attachment.length);
+
+        // Conditionally load the image.
+        if (0 == attachment.length // There must be an attachment
+            || !drawer.hasClass('opened') // The drawer must be closed
+            || drawer.hasClass('image-annotation-loaded') // The image must not already be loaded
+        ) {
+            return;
+        }
+
         var fileId = attachment.find('input[name$="[file_id]"]').val();
         // Note that a previous script sets imageAnnotationUrl.
         jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})
@@ -38,6 +44,7 @@ jQuery(document).ready(function () {
                         annotation.src = imageSrc;
                         anno.addAnnotation(annotation);
                     });
+                    drawer.addClass('image-annotation-loaded');
                 };
             })
             .fail(function(jqXHR) {

@@ -19,8 +19,6 @@ jQuery(document).ready(function () {
         var blockForm = drawer.closest('div.block-form');
         var attachment = blockForm.find('div.attachment');
 
-        console.log(attachment.length);
-
         // Conditionally load the image.
         if (0 == attachment.length // There must be an attachment
             || !drawer.hasClass('opened') // The drawer must be closed

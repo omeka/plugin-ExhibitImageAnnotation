@@ -1,16 +1,49 @@
 jQuery(document).ready(function () {
 
-    // Remove the add-item button from all image-annotation blocks.
-    function removeAddItem() {
-        var blocks = jQuery('input[name$="[layout]"][value="image-annotation"]').closest('div.block-form');
-        blocks.each(function() {
-            jQuery(this).find('div.add-item').hide();
-        });
+    /**
+     * Remove the "Add Item" button from an image annotation block.
+     *
+     * Note that each image annotation block must only have one attachment.
+     * There is no way to configure the exhibit builder to accommodate this, so
+     * we're using this as a stopgap.
+     *
+     * @param blockForm The '.block-form' jQuery object.
+     * @param checkAttachment Check that an attachment exists before removing
+     *     the button? Set to false if there's a chance the attachment is added
+     *     after calling this function (e.g. an AJAX race condition).
+     */
+    function removeAddItem(blockForm, checkAttachment=true) {
+        // First check that this is an image annotation block.
+        var input = blockForm.find('input[name$="[layout]"][value="image-annotation"]');
+        if (input.length) {
+            if (checkAttachment) {
+                var attachment = blockForm.find('div.attachment');
+                if (1 == attachment.length) {
+                    blockForm.find('div.add-item').hide();
+                }
+            } else {
+                blockForm.find('div.add-item').hide()
+            }
+        }
     }
 
-    removeAddItem();
+    // Remove all "Add Item" buttons on page load (if an attachement exists).
+    jQuery.each(jQuery('div.block-form'), function() {
+        removeAddItem(jQuery(this), true);
+    });
+
+    // Remove the "Add Item" button after applying an attachment.
     jQuery(document).on('click', '#apply-attachment', function(e) {
-        removeAddItem();
+        var blockForm = jQuery('.image-annotation-block-targeted');
+        blockForm.removeClass('image-annotation-block-targeted');
+        removeAddItem(blockForm, false);
+    });
+
+    // Flag the targeted block when adding an item.
+    jQuery(document).on('click', 'div.add-item', function(e) {
+        var blockForm = jQuery(this).closest('div.block-form');
+        jQuery('div.block-form').removeClass('image-annotation-block-targeted');
+        blockForm.addClass('image-annotation-block-targeted');
     });
 
     // Load an annotatable image.

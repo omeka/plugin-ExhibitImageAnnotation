@@ -4,7 +4,7 @@ if (isset($options['image-annotation'])) {
     $annotations = $options['image-annotation'];
 }
 ?>
-<div class="exhibit-items left fullsize captions-center">
+<div class="exhibit-items center fullsize captions-center">
     <?php foreach ($attachments as $attachment): ?>
         <?php
         // Note, cannot use $this->exhibitAttachment() or file_image() becuase

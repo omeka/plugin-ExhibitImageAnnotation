@@ -61,8 +61,6 @@ jQuery(document).ready(function () {
             annotations[this.src].push({text: this.text, shapes: this.shapes});
         });
         jQuery.each(annotations, function(src, annotation) {
-            console.log(src);
-            console.log(annotation);
             var imageId = /[^#]*$/.exec(src)[0];
             var image = jQuery('#' + imageId);
             var container = image.closest('div.image-annotation-container');

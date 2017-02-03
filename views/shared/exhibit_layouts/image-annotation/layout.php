@@ -1,10 +1,12 @@
 <?php
-$annotations = '[]';
-if (isset($options['image-annotation'])) {
-    $annotations = $options['image-annotation'];
-}
+$annotations = isset($options['image-annotation'])
+    ? $options['image-annotation'] : '[]';
+$position = isset($options['file-position'])
+    ? $options['file-position'] : 'left';
+$captionPosition = isset($options['captions-position'])
+    ? $options['captions-position'] : 'center';
 ?>
-<div class="exhibit-items center fullsize captions-center">
+<div class="exhibit-items fullsize <?php echo html_escape($position); ?> captions-<?php echo html_escape($captionPosition); ?>">
     <?php foreach ($attachments as $attachment): ?>
         <?php
         // Note, cannot use $this->exhibitAttachment() or file_image() becuase

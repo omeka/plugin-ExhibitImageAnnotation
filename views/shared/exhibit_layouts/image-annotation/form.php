@@ -1,7 +1,7 @@
 <?php
 $formStem = $block->getFormStem();
 $options = $block->getOptions();
-$annotations = null;
+$annotations = '[]';
 if (isset($options['image-annotation'])) {
     $annotations = $options['image-annotation'];
 }
@@ -16,7 +16,10 @@ if (isset($options['image-annotation'])) {
         <h4><?php echo __('Annotate Image'); ?></h4>
         <div class="drawer image-annotation-drawer"></div>
     </div>
-    <div class="image-annotation-container"
-        data-form-stem="<?php echo html_escape($formStem); ?>"
-        data-image-annotations="<?php echo html_escape(json_encode($annotations)); ?>"></div>
+    <div class="image-annotation-container">
+        <input type="hidden"
+            class="image-annotation-annotations"
+            name="<?php echo html_escape($formStem . '[options][image-annotation]'); ?>"
+            value="<?php echo html_escape($annotations); ?>">
+    </div>
 </div>

@@ -37,10 +37,11 @@ jQuery(document).ready(function () {
                 image.onload = function() {
                     anno.makeAnnotatable(image);
                     var imageSrc = jQuery(image).attr('src');
-                    jQuery.each(container.data('imageAnnotations'), function() {
-                        var annotation = JSON.parse(this);
-                        annotation.src = imageSrc;
-                        anno.addAnnotation(annotation);
+                    var annotationsInput = container.children('input.image-annotation-annotations');
+                    var annotations = JSON.parse(annotationsInput.val());
+                    jQuery.each(annotations, function() {
+                        this.src = imageSrc;
+                        anno.addAnnotation(this);
                     });
                     drawer.addClass('image-annotation-loaded');
                 };
@@ -52,15 +53,21 @@ jQuery(document).ready(function () {
 
     // Set the annotations for every image-annotation block.
     jQuery('#exhibit-page-form').on('submit', function(e) {
+        var annotations = {};
         jQuery.each(anno.getAnnotations(), function() {
-            var imageId = /[^#]*$/.exec(this.src)[0];
+            if (!annotations.hasOwnProperty(this.src)) {
+                annotations[this.src] = [];
+            }
+            annotations[this.src].push({text: this.text, shapes: this.shapes});
+        });
+        jQuery.each(annotations, function(src, annotation) {
+            console.log(src);
+            console.log(annotation);
+            var imageId = /[^#]*$/.exec(src)[0];
             var image = jQuery('#' + imageId);
             var container = image.closest('div.image-annotation-container');
-            jQuery('<input>')
-                .attr('type', 'hidden')
-                .attr('name', container.data('formStem') + '[options][image-annotation][]')
-                .val(JSON.stringify({text: this.text, shapes: this.shapes}))
-                .prependTo(container);
+            var annotationsInput = container.children('input.image-annotation-annotations');
+            annotationsInput.val(JSON.stringify(annotation));
         });
     });
 });

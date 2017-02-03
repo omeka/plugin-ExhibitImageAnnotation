@@ -5,10 +5,9 @@ jQuery(document).ready(function () {
         var imageSrc = image.attr('src');
         anno.hideSelectionWidget(imageSrc);
         jQuery.each(image.data('imageAnnotations'), function() {
-            var annotation = JSON.parse(this);
-            annotation.src = imageSrc;
-            annotation.editable = false;
-            anno.addAnnotation(annotation);
+            this.src = imageSrc;
+            this.editable = false;
+            anno.addAnnotation(this);
         });
     });
 });

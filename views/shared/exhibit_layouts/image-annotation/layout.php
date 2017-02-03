@@ -1,5 +1,5 @@
 <?php
-$annotations = null;
+$annotations = '[]';
 if (isset($options['image-annotation'])) {
     $annotations = $options['image-annotation'];
 }
@@ -14,7 +14,7 @@ if (isset($options['image-annotation'])) {
             'src' => $uri . '#' . $id,
             'id' => $id,
             'class' => 'image-annotation-image',
-            'data-image-annotations' => json_encode($annotations),
+            'data-image-annotations' => $annotations,
         );
         ?>
         <img <?php echo tag_attributes($attributes); ?>>

@@ -7,10 +7,10 @@ jQuery(document).ready(function () {
      * There is no way to configure the exhibit builder to accommodate this, so
      * we're using this as a stopgap.
      *
-     * @param blockForm The '.block-form' jQuery object.
-     * @param checkAttachment Check that an attachment exists before removing
-     *     the button? Set to false if there's a chance the attachment is added
-     *     after calling this function (e.g. an AJAX race condition).
+     * @param object blockForm The div.block-form jQuery object.
+     * @param bool checkAttachment Check that an attachment exists before
+     *     removing the button? Set to false if there's a chance the attachment
+     *     is added after calling this function (e.g. an AJAX race condition).
      */
     function removeAddItem(blockForm, checkAttachment=true) {
         // First check that this is an image annotation block.
@@ -39,7 +39,9 @@ jQuery(document).ready(function () {
         removeAddItem(blockForm, false);
     });
 
-    // Flag the targeted block when adding an item.
+    // Flag the targeted block when adding an item. Note that the exhibit
+    // builder sets an "item-target" class that we could use, but it removes it
+    // before appending the attachment due to an AJAX race condition.
     jQuery(document).on('click', 'div.add-item', function(e) {
         var blockForm = jQuery(this).closest('div.block-form');
         jQuery('div.block-form').removeClass('image-annotation-block-targeted');

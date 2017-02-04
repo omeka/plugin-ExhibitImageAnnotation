@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
 
     /**
-     * Remove the "Add Item" button from an image annotation block.
+     * Remove the "Add Item" button from a block.
      *
      * Note that each image annotation block must only have one attachment.
      * There is no way to configure the exhibit builder to accommodate this, so
@@ -12,40 +12,51 @@ jQuery(document).ready(function () {
      *     removing the button? Set to false if there's a chance the attachment
      *     is added after calling this function (e.g. an AJAX race condition).
      */
-    function removeAddItem(blockForm, checkAttachment=true) {
-        // First check that this is an image annotation block.
-        var input = blockForm.find('input[name$="[layout]"][value="image-annotation"]');
-        if (input.length) {
-            if (checkAttachment) {
-                var attachment = blockForm.find('div.attachment');
-                if (1 == attachment.length) {
-                    blockForm.find('div.add-item').hide();
-                }
-            } else {
-                blockForm.find('div.add-item').hide()
+    function removeAddItemButton(blockForm, checkAttachment=true) {
+        if (checkAttachment) {
+            var attachment = blockForm.find('div.attachment');
+            if (1 == attachment.length) {
+                blockForm.find('div.add-item').hide();
             }
+        } else {
+            blockForm.find('div.add-item').hide()
         }
     }
 
-    // Remove all "Add Item" buttons on page load (if an attachement exists).
-    jQuery.each(jQuery('div.block-form'), function() {
-        removeAddItem(jQuery(this), true);
+    /**
+     * Reduce a set of blocks to contain only image annotation blocks.
+     *
+     * @param object blockForm
+     * @return object
+     */
+    function reduceToImageAnnotationBlock(blockForm) {
+        return blockForm.has('input[name$="[layout]"][value="image-annotation"]');
+    }
+
+    // On page load, remove all "Add Item" buttons from image annotation blocks
+    // if an attachement already exists.
+    jQuery.each(reduceToImageAnnotationBlock(jQuery('div.block-form')), function() {
+        removeAddItemButton(jQuery(this), true);
     });
 
     // Remove the "Add Item" button after applying an attachment.
     jQuery(document).on('click', '#apply-attachment', function(e) {
         var blockForm = jQuery('.image-annotation-block-targeted');
         blockForm.removeClass('image-annotation-block-targeted');
-        removeAddItem(blockForm, false);
+        removeAddItemButton(blockForm, false);
     });
 
-    // Flag the targeted block when adding an item. Note that the exhibit
-    // builder sets an "item-target" class that we could use, but it removes it
-    // before appending the attachment due to an AJAX race condition.
+    // Flag the targeted image annotation block when adding an item. Note that
+    // the exhibit builder sets an "item-target" class that we could use, but it
+    // removes it before appending the attachment due to an AJAX race condition.
     jQuery(document).on('click', 'div.add-item', function(e) {
         var blockForm = jQuery(this).closest('div.block-form');
-        jQuery('div.block-form').removeClass('image-annotation-block-targeted');
-        blockForm.addClass('image-annotation-block-targeted');
+        if (reduceToImageAnnotationBlock(blockForm).length) {
+            // First remove all targeted flags in case the user x'ed out of a
+            // previous attachment modal.
+            jQuery('div.block-form').removeClass('image-annotation-block-targeted');
+            blockForm.addClass('image-annotation-block-targeted');
+        }
     });
 
     // Load an annotatable image.

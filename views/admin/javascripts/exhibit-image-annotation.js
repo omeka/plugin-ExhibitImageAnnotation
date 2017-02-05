@@ -46,10 +46,11 @@ jQuery(document).ready(function () {
         removeAddItemButton(blockForm, false);
     });
 
-    // Flag the targeted image annotation block when adding an item. Note that
-    // the exhibit builder sets an "item-target" class that we could use, but it
-    // removes it before appending the attachment due to an AJAX race condition.
-    jQuery(document).on('click', 'div.add-item', function(e) {
+    // Flag the targeted image annotation block when adding/editing an item.
+    // Note that the exhibit builder sets an "item-target" class that we could
+    // use, but it removes it before appending the attachment due to an AJAX
+    // race condition.
+    jQuery(document).on('click', 'div.add-item, span.edit-attachment', function(e) {
         var blockForm = jQuery(this).closest('div.block-form');
         if (reduceToImageAnnotationBlock(blockForm).length) {
             // First remove all targeted flags in case the user x'ed out of a

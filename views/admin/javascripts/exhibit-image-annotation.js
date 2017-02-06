@@ -1,76 +1,81 @@
 jQuery(document).ready(function () {
 
-    /**
-     * Remove the "Add Item" button from a block.
-     *
-     * Note that each image annotation block must only have one attachment.
-     * There is no way to configure the exhibit builder to accommodate this, so
-     * we're using this as a stopgap.
-     *
-     * @param object blockForm The div.block-form jQuery object.
-     * @param bool checkAttachment Check that an attachment exists before
-     *     removing the button? Set to false if there's a chance the attachment
-     *     is added after calling this function (e.g. an AJAX race condition).
-     */
-    function removeAddItemButton(blockForm, checkAttachment=true) {
-        if (checkAttachment) {
-            if (blockForm.find('div.attachment').length) {
-                blockForm.find('div.add-item').hide();
+    Omeka.ExhibitImageAnnotation = {
+
+        /**
+         * Remove the "Add Item" button from a block.
+         *
+         * Note that each image annotation block must only have one attachment.
+         * There is no way to configure the exhibit builder to accommodate this,
+         * so we're using this as a stopgap.
+         *
+         * @param object blockForm The div.block-form jQuery object.
+         * @param bool checkAttachment Check that an attachment exists before
+         *     removing the button? Set to false if there's a chance the
+         *     attachment is added after calling this function (e.g. an AJAX
+         *     race condition).
+         */
+        removeAddItemButton: function(blockForm, checkAttachment=true) {
+            if (checkAttachment) {
+                if (blockForm.find('div.attachment').length) {
+                    blockForm.find('div.add-item').hide();
+                }
+            } else {
+                blockForm.find('div.add-item').hide()
             }
-        } else {
-            blockForm.find('div.add-item').hide()
-        }
-    }
+        },
 
-    /**
-     * Reduce a set of blocks to contain only image annotation blocks.
-     *
-     * @param object blockForm
-     * @return object
-     */
-    function reduceToImageAnnotationBlock(blockForm) {
-        return blockForm.has('input[name$="[layout]"][value="image-annotation"]');
-    }
+        /**
+         * Reduce a set of blocks to contain only image annotation blocks.
+         *
+         * @param object blockForm
+         * @return object
+         */
+        reduceToImageAnnotationBlock: function(blockForm) {
+            return blockForm.has('input[name$="[layout]"][value="image-annotation"]');
+        },
 
-    /**
-     * Load an annotatable image into a block.
-     *
-     * @param object blockForm The div.block-form jQuery object.
-     */
-    function loadAnnotatableImage(blockForm, attachment) {
-        var fileId = attachment.find('input[name$="[file_id]"]').val();
-        // Note that a previous script sets imageAnnotationUrl.
-        jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})
-            .done(function(data) {
-                var container = blockForm.find('div.image-annotation-container');
-                var image = jQuery.parseHTML(data)[0];
-                image.onload = function() {
-                    anno.makeAnnotatable(image);
-                    var annotationsInput = container.children('input.image-annotation-annotations');
-                    var annotations = JSON.parse(annotationsInput.val());
-                    jQuery.each(annotations, function() {
-                        this.src = image.src;
-                        anno.addAnnotation(this);
-                    });
-                };
-                container.append(image);
-            })
-            .fail(function(jqXHR) {
-                console.log(jqXHR);
-            });
-    }
+        /**
+         * Load an annotatable image into a block.
+         *
+         * @param object blockForm The div.block-form jQuery object.
+         */
+        loadAnnotatableImage: function(blockForm, attachment) {
+            var fileId = attachment.find('input[name$="[file_id]"]').val();
+            // Note that a previous script sets imageAnnotationUrl.
+            jQuery.post(imageAnnotationUrl, {
+                    fileId: fileId,
+                    index: blockForm.data('blockIndex'),
+                }).done(function(data) {
+                    var container = blockForm.find('div.image-annotation-container');
+                    var image = jQuery.parseHTML(data)[0];
+                    image.onload = function() {
+                        anno.makeAnnotatable(image);
+                        var annotationsInput = container.children('input.image-annotation-annotations');
+                        var annotations = JSON.parse(annotationsInput.val());
+                        jQuery.each(annotations, function() {
+                            this.src = image.src;
+                            anno.addAnnotation(this);
+                        });
+                    };
+                    container.append(image);
+                }).fail(function(jqXHR) {
+                    console.log(jqXHR);
+                });
+        },
+    };
 
     // On page load, remove all "Add Item" buttons from image annotation blocks
     // if an attachement already exists.
-    jQuery.each(reduceToImageAnnotationBlock(jQuery('div.block-form')), function() {
-        removeAddItemButton(jQuery(this), true);
+    jQuery.each(Omeka.ExhibitImageAnnotation.reduceToImageAnnotationBlock(jQuery('div.block-form')), function() {
+        Omeka.ExhibitImageAnnotation.removeAddItemButton(jQuery(this), true);
     });
 
     // Remove the "Add Item" button after applying an attachment.
     jQuery(document).on('click', '#apply-attachment', function(e) {
         var blockForm = jQuery('.image-annotation-block-targeted');
         blockForm.removeClass('image-annotation-block-targeted');
-        removeAddItemButton(blockForm, false);
+        Omeka.ExhibitImageAnnotation.removeAddItemButton(blockForm, false);
     });
 
     // Flag the targeted image annotation block when adding/editing an item.
@@ -79,7 +84,7 @@ jQuery(document).ready(function () {
     // race condition.
     jQuery(document).on('click', 'div.add-item, span.edit-attachment', function(e) {
         var blockForm = jQuery(this).closest('div.block-form');
-        if (reduceToImageAnnotationBlock(blockForm).length) {
+        if (Omeka.ExhibitImageAnnotation.reduceToImageAnnotationBlock(blockForm).length) {
             // First remove all targeted flags in case the user x'ed out of a
             // previous attachment modal.
             jQuery('div.block-form').removeClass('image-annotation-block-targeted');
@@ -98,7 +103,7 @@ jQuery(document).ready(function () {
             // Destroy an existing annotatable image before loading another one.
             container.children('div.annotorious-annotationlayer').remove();
             anno.destroy(image.attr('src'));
-            loadAnnotatableImage(blockForm, attachment);
+            Omeka.ExhibitImageAnnotation.loadAnnotatableImage(blockForm, attachment);
         } else {
             alert('No image is selected. Please add an item above.');
         }

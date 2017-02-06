@@ -14,8 +14,7 @@ jQuery(document).ready(function () {
      */
     function removeAddItemButton(blockForm, checkAttachment=true) {
         if (checkAttachment) {
-            var attachment = blockForm.find('div.attachment');
-            if (1 == attachment.length) {
+            if (blockForm.find('div.attachment').length) {
                 blockForm.find('div.add-item').hide();
             }
         } else {
@@ -31,6 +30,34 @@ jQuery(document).ready(function () {
      */
     function reduceToImageAnnotationBlock(blockForm) {
         return blockForm.has('input[name$="[layout]"][value="image-annotation"]');
+    }
+
+    /**
+     * Load an annotatable image into a block.
+     *
+     * @param object blockForm The div.block-form jQuery object.
+     */
+    function loadAnnotatableImage(blockForm, attachment) {
+        var fileId = attachment.find('input[name$="[file_id]"]').val();
+        // Note that a previous script sets imageAnnotationUrl.
+        jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})
+            .done(function(data) {
+                var container = blockForm.find('div.image-annotation-container');
+                var image = jQuery.parseHTML(data)[0];
+                image.onload = function() {
+                    anno.makeAnnotatable(image);
+                    var annotationsInput = container.children('input.image-annotation-annotations');
+                    var annotations = JSON.parse(annotationsInput.val());
+                    jQuery.each(annotations, function() {
+                        this.src = image.src;
+                        anno.addAnnotation(this);
+                    });
+                };
+                container.append(image);
+            })
+            .fail(function(jqXHR) {
+                console.log(jqXHR);
+            });
     }
 
     // On page load, remove all "Add Item" buttons from image annotation blocks
@@ -61,41 +88,20 @@ jQuery(document).ready(function () {
     });
 
     // Load an annotatable image.
-    jQuery(document).on('click', 'div.image-annotation-drawer', function(e) {
-        var drawer = jQuery(this);
-        var blockForm = drawer.closest('div.block-form');
+    jQuery(document).on('click', 'a.image-annotation-load-image', function(e) {
+        e.preventDefault();
+        var blockForm = jQuery(this).closest('div.block-form');
         var attachment = blockForm.find('div.attachment');
-
-        // Conditionally load the image.
-        if (0 == attachment.length // There must be an attachment
-            || !drawer.hasClass('opened') // The drawer must be closed
-            || drawer.hasClass('image-annotation-loaded') // The image must not already be loaded
-        ) {
-            return;
+        if (attachment.length) {
+            var container = blockForm.find('div.image-annotation-container');
+            var image = container.find('image-annotation-image');
+            // Destroy an existing annotatable image before loading another one.
+            container.children('div.annotorious-annotationlayer').remove();
+            anno.destroy(image.attr('src'));
+            loadAnnotatableImage(blockForm, attachment);
+        } else {
+            alert('No image is selected. Please add an item above.');
         }
-
-        var fileId = attachment.find('input[name$="[file_id]"]').val();
-        // Note that a previous script sets imageAnnotationUrl.
-        jQuery.post(imageAnnotationUrl, {fileId: fileId, index: blockForm.data('blockIndex')})
-            .done(function(data) {
-                var container = blockForm.find('div.image-annotation-container');
-                var image = jQuery.parseHTML(data)[0];
-                container.append(image);
-                image.onload = function() {
-                    anno.makeAnnotatable(image);
-                    var imageSrc = jQuery(image).attr('src');
-                    var annotationsInput = container.children('input.image-annotation-annotations');
-                    var annotations = JSON.parse(annotationsInput.val());
-                    jQuery.each(annotations, function() {
-                        this.src = imageSrc;
-                        anno.addAnnotation(this);
-                    });
-                    drawer.addClass('image-annotation-loaded');
-                };
-            })
-            .fail(function(jqXHR) {
-                console.log(jqXHR);
-            });
     });
 
     // Set the annotations for every image-annotation block.

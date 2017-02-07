@@ -39,8 +39,10 @@ jQuery(document).ready(function () {
          * Load an annotatable image into a block.
          *
          * @param object blockForm The div.block-form jQuery object.
+         * @param object attachment The div.attachment jQuery object.
+         * @param array annotations An array of Annotorious annotations.
          */
-        loadAnnotatableImage: function(blockForm, attachment) {
+        loadAnnotatableImage: function(blockForm, attachment, annotations) {
             var fileId = attachment.find('input[name$="[file_id]"]').val();
             // Note that a previous script sets imageAnnotationUrl.
             jQuery.post(imageAnnotationUrl, {
@@ -50,9 +52,11 @@ jQuery(document).ready(function () {
                     var container = blockForm.find('div.image-annotation-container');
                     var image = jQuery.parseHTML(data)[0];
                     image.onload = function() {
+                        if (!annotations.length) {
+                            var annotationsInput = container.children('input.image-annotation-annotations');
+                            annotations = JSON.parse(annotationsInput.val());
+                        }
                         anno.makeAnnotatable(image);
-                        var annotationsInput = container.children('input.image-annotation-annotations');
-                        var annotations = JSON.parse(annotationsInput.val());
                         jQuery.each(annotations, function() {
                             this.src = image.src;
                             anno.addAnnotation(this);
@@ -100,10 +104,11 @@ jQuery(document).ready(function () {
         if (attachment.length) {
             var container = blockForm.find('div.image-annotation-container');
             var image = container.find('image-annotation-image');
+            var annotations = anno.getAnnotations(image.attr('src'));
             // Destroy an existing annotatable image before loading another one.
             container.children('div.annotorious-annotationlayer').remove();
             anno.destroy(image.attr('src'));
-            Omeka.ExhibitImageAnnotation.loadAnnotatableImage(blockForm, attachment);
+            Omeka.ExhibitImageAnnotation.loadAnnotatableImage(blockForm, attachment, annotations);
         } else {
             alert('No image is selected. Please add an item above.');
         }

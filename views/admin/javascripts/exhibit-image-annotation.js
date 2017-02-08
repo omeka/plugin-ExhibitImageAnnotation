@@ -103,11 +103,15 @@ jQuery(document).ready(function () {
         var attachment = blockForm.find('div.attachment');
         if (attachment.length) {
             var container = blockForm.find('div.image-annotation-container');
-            var image = container.find('image-annotation-image');
-            var annotations = anno.getAnnotations(image.attr('src'));
-            // Destroy an existing annotatable image before loading another one.
-            container.children('div.annotorious-annotationlayer').remove();
-            anno.destroy(image.attr('src'));
+            var annotations = [];
+            var image = container.find('.image-annotation-image');
+            if (image.length) {
+                // Load annotations from and destroy an existing annotatable
+                // image before loading another one.
+                annotations = anno.getAnnotations(image.attr('src'));
+                container.children('div.annotorious-annotationlayer').remove();
+                anno.destroy(image.attr('src'));
+            }
             Omeka.ExhibitImageAnnotation.loadAnnotatableImage(blockForm, attachment, annotations);
         } else {
             alert('No image is selected. Please add an item above.');

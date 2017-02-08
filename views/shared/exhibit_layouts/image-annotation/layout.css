@@ -59,3 +59,8 @@
 .layout-image-annotation .captions-right .exhibit-item-caption {
     text-align: right;
 }
+
+.layout-image-annotation .annotorious-popup {
+    font-family: inherit;
+    border-radius: 0px;
+}

@@ -6,6 +6,7 @@ class ExhibitImageAnnotationPlugin extends Omeka_Plugin_AbstractPlugin
 
     public function hookAdminHead()
     {
+        queue_css_file('exhibit-image-annotation');
         queue_css_file('annotorious-0.6.4/css/annotorious', 'all', false, 'javascripts');
         queue_js_file('annotorious-0.6.4/annotorious.min');
         queue_js_file('exhibit-image-annotation');

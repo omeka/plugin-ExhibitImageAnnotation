@@ -44,13 +44,12 @@ jQuery(document).ready(function () {
          */
         loadAnnotatableImage: function(blockForm, attachment, annotations) {
             var fileId = attachment.find('input[name$="[file_id]"]').val();
-            // Note that a previous script sets imageAnnotationUrl.
-            jQuery.post(imageAnnotationUrl, {
-                    fileId: fileId,
-                    index: blockForm.data('blockIndex'),
-                }).done(function(data) {
+            // Note that a previous script sets imageAnnotationImageUrl.
+            jQuery.post(imageAnnotationImageUrl, {fileId: fileId})
+                .done(function(imageUrl) {
                     var container = blockForm.find('div.image-annotation-container');
-                    var image = jQuery.parseHTML(data)[0];
+                    var imageId = 'image-annotation-' + blockForm.data('blockIndex');
+                    var image = new Image();
                     image.onload = function() {
                         if (!annotations.length) {
                             var annotationsInput = container.children('input.image-annotation-annotations');
@@ -62,6 +61,9 @@ jQuery(document).ready(function () {
                             anno.addAnnotation(this);
                         });
                     };
+                    image.src = imageUrl + '#' + imageId;
+                    image.id = imageId;
+                    image.className = 'image-annotation-image';
                     container.append(image);
                 }).fail(function(jqXHR) {
                     console.log(jqXHR);

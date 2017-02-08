@@ -7,9 +7,10 @@ class ExhibitImageAnnotation_IndexController extends Omeka_Controller_AbstractAc
             return $this->_forward('not-found', 'error');
         }
         $file = get_record_by_id('File', $this->_getParam('fileId'));
-        $imageUrl = $file->hasThumbnail()
-            ? $file->getWebPath('fullsize')
-            : img('fallback-file.png');
+        $imageUrl = false;
+        if ($file->hasFullsize()) {
+            $imageUrl = $file->getWebPath('fullsize');
+        }
         $this->_helper->json($imageUrl);
     }
 }

@@ -47,24 +47,28 @@ jQuery(document).ready(function () {
             // Note that a previous script sets imageAnnotationImageUrl.
             jQuery.post(imageAnnotationImageUrl, {fileId: fileId})
                 .done(function(imageUrl) {
-                    var container = blockForm.find('div.image-annotation-container');
-                    var imageId = 'image-annotation-' + blockForm.data('blockIndex');
-                    var image = new Image();
-                    image.onload = function() {
-                        if (!annotations.length) {
-                            var annotationsInput = container.children('input.image-annotation-annotations');
-                            annotations = JSON.parse(annotationsInput.val());
-                        }
-                        anno.makeAnnotatable(image);
-                        jQuery.each(annotations, function() {
-                            this.src = image.src;
-                            anno.addAnnotation(this);
-                        });
-                    };
-                    image.src = imageUrl + '#' + imageId;
-                    image.id = imageId;
-                    image.className = 'image-annotation-image';
-                    container.append(image);
+                    if (imageUrl) {
+                        var container = blockForm.find('div.image-annotation-container');
+                        var imageId = 'image-annotation-' + blockForm.data('blockIndex');
+                        var image = new Image();
+                        image.onload = function() {
+                            if (!annotations.length) {
+                                var annotationsInput = container.children('input.image-annotation-annotations');
+                                annotations = JSON.parse(annotationsInput.val());
+                            }
+                            anno.makeAnnotatable(image);
+                            jQuery.each(annotations, function() {
+                                this.src = image.src;
+                                anno.addAnnotation(this);
+                            });
+                        };
+                        image.src = imageUrl + '#' + imageId;
+                        image.id = imageId;
+                        image.className = 'image-annotation-image';
+                        container.append(image);
+                    } else {
+                        alert('Cannot load image. The selected file has no image.');
+                    }
                 }).fail(function(jqXHR) {
                     console.log(jqXHR);
                 });
@@ -116,7 +120,7 @@ jQuery(document).ready(function () {
             }
             Omeka.ExhibitImageAnnotation.loadAnnotatableImage(blockForm, attachment, annotations);
         } else {
-            alert('No image is selected. Please add an item above.');
+            alert('Cannot load image. Please add an item and select a file above.');
         }
     });
 

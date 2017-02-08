@@ -17,7 +17,7 @@ if (isset($options['image-annotation'])) {
         <div class="drawer image-annotation-drawer"></div>
     </div>
     <div class="image-annotation-container">
-        <p><a href="#" class="image-annotation-load-image"><?php echo __('Load selected image.'); ?></a></p>
+        <p><a href="#" class="image-annotation-load-image button"><?php echo __('Load selected image.'); ?></a></p>
         <input type="hidden"
             class="image-annotation-annotations"
             name="<?php echo html_escape($formStem . '[options][image-annotation]'); ?>"

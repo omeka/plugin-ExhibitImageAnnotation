@@ -1,3 +1,4 @@
+var Omeka = Omeka || {};
 jQuery(document).ready(function () {
 
     Omeka.ExhibitImageAnnotation = {

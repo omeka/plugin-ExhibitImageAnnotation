@@ -124,21 +124,12 @@ jQuery(document).ready(function () {
         }
     });
 
-    // Set the annotations for every image-annotation block.
+    // Set the annotations for every loaded image in every image-annotation block.
     jQuery('#exhibit-page-form').on('submit', function(e) {
-        var annotations = {};
-        jQuery.each(anno.getAnnotations(), function() {
-            if (!annotations.hasOwnProperty(this.src)) {
-                annotations[this.src] = [];
-            }
-            annotations[this.src].push({text: this.text, shapes: this.shapes});
-        });
-        jQuery.each(annotations, function(src, annotation) {
-            var imageId = /[^#]*$/.exec(src)[0];
-            var image = jQuery('#' + imageId);
-            var container = image.closest('div.image-annotation-container');
+        jQuery('img.image-annotation-image').each(function() {
+            var container = jQuery(this).closest('div.image-annotation-container');
             var annotationsInput = container.children('input.image-annotation-annotations');
-            annotationsInput.val(JSON.stringify(annotation));
+            annotationsInput.val(JSON.stringify(anno.getAnnotations(this.src)));
         });
     });
 });

@@ -20,8 +20,11 @@ jQuery(document).ready(function () {
         },
     };
 
-    // Add image annotations on page load.
-    Omeka.ExhibitImageAnnotation.addAnnotations();
+    // Add image annotations on page load. Pause a bit before adding annotations
+    // to give images time to load.
+    setTimeout(function() {
+        Omeka.ExhibitImageAnnotation.addAnnotations();
+    }, 800);
 
     // Re-add image annotations when page resizes. Otherwise the annotations
     // will not scale with the zoom level. Set a delay to avoid calling the

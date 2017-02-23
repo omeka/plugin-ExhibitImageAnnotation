@@ -126,10 +126,16 @@ jQuery(document).ready(function () {
 
     // Set the annotations for every loaded image in every image-annotation block.
     jQuery('#exhibit-page-form').on('submit', function(e) {
+        var annotations;
         jQuery('img.image-annotation-image').each(function() {
-            var container = jQuery(this).closest('div.image-annotation-container');
-            var annotationsInput = container.children('input.image-annotation-annotations');
-            annotationsInput.val(JSON.stringify(anno.getAnnotations(this.src)));
+            // Only persist the properties needed to hydrate an annotation.
+            annotations = [];
+            jQuery.each(anno.getAnnotations(this.src), function() {
+                annotations.push({text: this.text, shapes: this.shapes});
+            });
+            jQuery(this).closest('div.image-annotation-container')
+                .children('input.image-annotation-annotations')
+                .val(JSON.stringify(annotations));
         });
     });
 });

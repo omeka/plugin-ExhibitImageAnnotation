@@ -24,7 +24,7 @@ $captionPosition = isset($options['captions-position'])
             'data-image-annotations' => $annotations,
         );
         $imageTag = sprintf('<img %s>', tag_attributes($imageAttributes));
-        echo link_to($file, 'show', $imageTag);
+        echo exhibit_builder_link_to_exhibit_item($imageTag, array(), $file->getItem());
         echo $this->exhibitAttachmentCaption($attachment)
         ?>
     <?php endforeach; ?>

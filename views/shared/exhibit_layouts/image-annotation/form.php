@@ -14,7 +14,7 @@ if (isset($options['image-annotation'])) {
 <div class="layout-options">
     <div class="block-header">
         <h4><?php echo __('Annotate Image'); ?></h4>
-        <div class="drawer image-annotation-drawer"></div>
+        <div class="drawer-toggle image-annotation-drawer"></div>
     </div>
     <div class="image-annotation-container">
         <p><a href="#" class="image-annotation-load-image button"><?php echo __('Load selected image.'); ?></a></p>
@@ -28,7 +28,7 @@ if (isset($options['image-annotation'])) {
 <div class="layout-options">
     <div class="block-header">
         <h4><?php echo __('Layout Options'); ?></h4>
-        <div class="drawer"></div>
+        <div class="drawer-toggle"></div>
     </div>
     <div class="file-position">
         <?php echo $this->formLabel(

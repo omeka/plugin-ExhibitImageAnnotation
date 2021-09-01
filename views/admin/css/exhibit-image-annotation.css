@@ -1,39 +1,31 @@
-.exhibits .annotorious-editor {
-    border-radius: 0px;
+.annotorious-editor-button.annotorious-editor-button-save {
+    color: #326200;
+    background: #eaf2e1;
+    border: 1px solid rgba(63, 123, 0, 0.25);
 }
 
-.exhibits .annotorious-editor-button {
-    border-radius: 0px;
-    color: #fff;
+.annotorious-editor-button.annotorious-editor-button-save:hover {
+    border-color: rgba(63, 123, 0, 0.65);
+    background: #deeacf;
+    outline: none;
 }
 
-.exhibits .annotorious-editor-button:hover {
-    color: #fff;
+.annotorious-editor-button.annotorious-editor-button-cancel {
+    color: #B00D00;
+    background: #F9E8E7;
+    border: 1px solid rgba(176, 13, 0, 0.25);
 }
 
-.exhibits .annotorious-editor-button-save {
-    background: linear-gradient(to bottom, #A4C637, #75940A);
-    box-shadow: 0px 1px 0px 0px #bdd662 inset, 0px -1px 0px 0px #6a821a inset, 0px 2px 2px 0px #d4d4d4;
-    border: 1px solid #749308;
+.annotorious-editor-button.annotorious-editor-button-cancel:hover {
+    border-color: rgba(176, 13, 0, 0.65);
+    background: #f4d4d3;
+    outline: none;
 }
 
-.exhibits .annotorious-editor-button-save:hover {
-    background: linear-gradient(to bottom, #A4C637, #75940A);
-    box-shadow: 0px 1px 0px 0px #BDD662 inset, 0px -1px 0px 0px #6A821A inset, 0px 0px 10px 0px #A4C637, 0px 2px 2px 0px #D4D4D4;
+a.annotorious-editor-button {
+    text-decoration: none;
 }
 
-.exhibits .annotorious-editor-button-cancel {
-    background: linear-gradient(to bottom, #ad6345, #7d422a);
-    box-shadow: 0px 1px 0px 0px #b87979 inset, 0px -1px 0px 0px #5e3030 inset, 0px 2px 2px 0px #d4d4d4;
-    border: 1px solid #7E432C;
-}
-
-.exhibits .annotorious-editor-button-cancel:hover {
-    background: linear-gradient(to bottom, #ad6345, #7d422a);
-    box-shadow: 0px 1px 0px 0px #b87979 inset, 0px -1px 0px 0px #5e3030 inset, 0px 0px 10px 0px #7d422a, 0px 2px 2px 0px #d4d4d4;
-}
-
-.exhibits .annotorious-editor > div {
-    /* Hide the editor resize div. Instead, depend on the browser's native textarea resize. */
-    display: none !important;
+.image-annotation-image {
+    max-width: 100%;
 }

@@ -11,10 +11,10 @@ if (isset($options['image-annotation'])) {
     <?php echo $this->exhibitFormAttachments($block); ?>
 </div>
 
-<div class="layout-options">
+<div class="layout-options" role="group" aria-labelledby="<?php echo $formStem; ?>-annotate-image-label">
     <div class="block-header drawer">
-        <h4><?php echo __('Annotate Image'); ?></h4>
-        <button class="drawer-toggle image-annotation-drawer" type="button" data-action-selector="opened" aria-expanded="true" aria-controls="<?php echo $formStem; ?>-layout-options" aria-label="<?php echo __('Show options'); ?>" title="<?php echo __('Show options'); ?>"><span class="icon"></span></button>
+        <h4 id="<?php echo $formStem; ?>-annotate-image-label"><?php echo __('Annotate Image'); ?></h4>
+        <button class="drawer-toggle image-annotation-drawer" type="button" data-action-selector="opened" aria-expanded="false" aria-controls="<?php echo $formStem; ?>-layout-options" aria-label="<?php echo __('Show options'); ?>" title="<?php echo __('Show options'); ?>"><span class="icon"></span></button>
     </div>
     <div class=" drawer-contents" id="<?php echo $formStem; ?>-layout-options">
         <div class="image-annotation-container">
@@ -27,10 +27,10 @@ if (isset($options['image-annotation'])) {
     </div>
 </div>
 
-<div class="layout-options">
+<div class="layout-options" role="group" aria-labelledby="<?php echo $formStem; ?>-layout-options-label">
     <div class="block-header drawer">
-        <h4><?php echo __('Layout Options'); ?></h4>
-        <button class="drawer-toggle" type="button" data-action-selector="opened" aria-expanded="true" aria-controls="<?php echo $formStem; ?>-layout-options" aria-label="<?php echo __('Show options'); ?>" title="<?php echo __('Show options'); ?>"><span class="icon"></span></button>
+        <h4 id="<?php echo $formStem; ?>-layout-options-label"><?php echo __('Layout Options'); ?></h4>
+        <button class="drawer-toggle" type="button" data-action-selector="opened" aria-expanded="false" aria-controls="<?php echo $formStem; ?>-layout-options" aria-label="<?php echo __('Show options'); ?>" title="<?php echo __('Show options'); ?>"><span class="icon"></span></button>
     </div>
     <div class="drawer-contents" id="<?php echo $formStem; ?>-layout-options">
         <div class="file-position">

@@ -20,11 +20,13 @@ $captionPosition = isset($options['captions-position'])
             ? $file->getWebPath('fullsize')
             : img('fallback-file.png');
         $imageId = 'image-annotation-' . $attachment->id;
+        $imageAltText = ($file->getAltText()) ? $file->getAltText() : '';
         $imageAttributes = array(
             'src' => $imageUrl . '#' . $imageId,
             'id' => $imageId,
             'class' => 'image-annotation-image',
             'data-image-annotations' => $annotations,
+            'alt' => $imageAltText
         );
         $imageTag = sprintf('<img %s>', tag_attributes($imageAttributes));
         echo exhibit_builder_link_to_exhibit_item($imageTag, array(), $file->getItem());

@@ -1,8 +1,8 @@
 <?php
 class ExhibitImageAnnotationPlugin extends Omeka_Plugin_AbstractPlugin
 {
-    protected $_hooks = array('admin_head', 'public_head', 'html_purifier_form_submission');
-    protected $_filters = array('exhibit_layouts');
+    protected $_hooks = ['admin_head', 'public_head', 'html_purifier_form_submission'];
+    protected $_filters = ['exhibit_layouts'];
 
     public function hookAdminHead()
     {
@@ -31,7 +31,7 @@ class ExhibitImageAnnotationPlugin extends Omeka_Plugin_AbstractPlugin
         $request = Zend_Controller_Front::getInstance()->getRequest();
         if ('exhibit-builder' !== $request->getModuleName()
             || 'exhibits' !== $request->getControllerName()
-            || !in_array($request->getActionName(), array('add-page', 'edit-page'))
+            || !in_array($request->getActionName(), ['add-page', 'edit-page'])
         ) {
             return;
         }
@@ -58,10 +58,10 @@ class ExhibitImageAnnotationPlugin extends Omeka_Plugin_AbstractPlugin
     }
 
     public function filterExhibitLayouts($layouts) {
-        $layouts['image-annotation'] = array(
+        $layouts['image-annotation'] = [
             'name' => 'Image Annotation',
             'description' => 'Layout featuring annotatable images'
-        );
+        ];
         return $layouts;
     }
 }

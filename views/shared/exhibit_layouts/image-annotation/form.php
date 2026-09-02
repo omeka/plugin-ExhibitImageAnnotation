@@ -41,13 +41,13 @@ if (isset($options['image-annotation'])) {
             <?php
             echo $this->formSelect(
                 $formStem . '[options][file-position]',
-                isset($options['file-position']) ? $options['file-position'] : null,
-                array(),
-                array(
+                $options['file-position'] ?? null,
+                [],
+                [
                     'left' => __('Left'),
                     'right' => __('Right'),
                     'center' => __('Center')
-                )
+                ]
             );
             ?>
         </div>
@@ -59,13 +59,13 @@ if (isset($options['image-annotation'])) {
             <?php
             echo $this->formSelect(
                 $formStem . '[options][captions-position]',
-                isset($options['captions-position']) ? $options['captions-position'] : null,
-                array(),
-                array(
+                $options['captions-position'] ?? null,
+                [],
+                [
                     'center' => __('Center'),
                     'left' => __('Left'),
                     'right' => __('Right')
-                ));
+                ]);
             ?>
         </div>
     </div>

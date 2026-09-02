@@ -1,10 +1,7 @@
 <?php
-$annotations = isset($options['image-annotation'])
-    ? $options['image-annotation'] : '[]';
-$position = isset($options['file-position'])
-    ? $options['file-position'] : 'left';
-$captionPosition = isset($options['captions-position'])
-    ? $options['captions-position'] : 'center';
+$annotations = $options['image-annotation'] ?? '[]';
+$position = $options['file-position'] ?? 'left';
+$captionPosition = $options['captions-position'] ?? 'center';
 ?>
 <div class="exhibit-items fullsize <?php echo html_escape($position); ?> captions-<?php echo html_escape($captionPosition); ?>">
     <?php foreach ($attachments as $attachment): ?>
@@ -20,16 +17,16 @@ $captionPosition = isset($options['captions-position'])
             ? $file->getWebPath('fullsize')
             : img('fallback-file.png');
         $imageId = 'image-annotation-' . $attachment->id;
-        $imageAltText = ($file->getAltText()) ? $file->getAltText() : '';
-        $imageAttributes = array(
+        $imageAltText = $file->getAltText() ?? '';
+        $imageAttributes = [
             'src' => $imageUrl . '#' . $imageId,
             'id' => $imageId,
             'class' => 'image-annotation-image',
             'data-image-annotations' => $annotations,
             'alt' => $imageAltText
-        );
+        ];
         $imageTag = sprintf('<img %s>', tag_attributes($imageAttributes));
-        echo exhibit_builder_link_to_exhibit_item($imageTag, array(), $file->getItem());
+        echo exhibit_builder_link_to_exhibit_item($imageTag, [], $file->getItem());
         echo $this->exhibitAttachmentCaption($attachment)
         ?>
     <?php endforeach; ?>

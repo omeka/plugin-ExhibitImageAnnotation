@@ -13,6 +13,9 @@ $captionPosition = isset($options['captions-position'])
         // we need to append a fragment to the image src URL so Annotorious can
         // uniquely identify the image on the page.
         $file = $attachment->getFile();
+        if (!$file) {
+            continue;
+        }
         $imageUrl = $file->hasThumbnail()
             ? $file->getWebPath('fullsize')
             : img('fallback-file.png');
